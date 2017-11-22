@@ -71,7 +71,6 @@ def play_one_game(bj_strat):
 	if my_points < 21:
 		decision=bj_strat[dealer_card][my_points][num_card_value["A"]][num_card_value["2345"]][num_card_value["6789"]][num_card_value["TJQK"]].decision()
 	else:
-		doubledown=2
 		decision='S'
 
 	#Deal a card based on decision as long as not busting 
@@ -80,6 +79,7 @@ def play_one_game(bj_strat):
 		update_hand(hand[deck_counter], num_card_value)
 		my_points=hand_points(my_cards)
 		if decision=='D':
+			doubledown=2
 			decision='S' #Must stand after doubling.
 		elif my_points < 21:
 			decision=bj_strat[dealer_card][my_points][num_card_value["A"]][num_card_value["2345"]][num_card_value["6789"]][num_card_value["TJQK"]].decision()
