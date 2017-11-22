@@ -43,7 +43,7 @@ class Blackjack_Strategy:
 # strat[dealer_card][num_points][num_aces][num_two_to_five][num_six_to_nine][num_faces]
 def generate_strategy():
 	dealer_card_array = []
-	for dealer_card in range(0,13):#Ace to King
+	for dealer_card in range(0,10):#Ace to Ten. JQK counts as the same as 10.
 		num_points_array = []
 		for num_points in range(0,21):#0 to 20 points
 			num_aces_array = []

@@ -62,14 +62,14 @@ def play_one_game(bj_strat):
 	my_points=hand_points(my_cards)
 
 	deal_cards.append(hand[3])
-	dealer_card=CARD_VALUES[hand[3][0]]
+	dealer_card=(CARD_VALUES[hand[3][0]]-1)%10
 
 	deck_counter=4
 
 	# 'H'-hold, 'S'-stand, 'D'-doubledown
 	# strat[dealer_card][my_points][num_aces][num_two_to_five][num_six_to_nine][num_faces]
 	if my_points < 21:
-		decision=bj_strat[dealer_card-1][my_points][num_card_value["A"]][num_card_value["2345"]][num_card_value["6789"]][num_card_value["TJQK"]].decision()
+		decision=bj_strat[dealer_card][my_points][num_card_value["A"]][num_card_value["2345"]][num_card_value["6789"]][num_card_value["TJQK"]].decision()
 	else:
 		doubledown=2
 		decision='S'
@@ -82,7 +82,7 @@ def play_one_game(bj_strat):
 		if decision=='D':
 			decision='S' #Must stand after doubling.
 		elif my_points < 21:
-			decision=bj_strat[dealer_card-1][my_points][num_card_value["A"]][num_card_value["2345"]][num_card_value["6789"]][num_card_value["TJQK"]].decision()
+			decision=bj_strat[dealer_card][my_points][num_card_value["A"]][num_card_value["2345"]][num_card_value["6789"]][num_card_value["TJQK"]].decision()
 
 		deck_counter+=1
 
