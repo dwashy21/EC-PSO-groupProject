@@ -7,9 +7,13 @@ import itertools
 SUITS = 'cdhs'
 RANKS = '23456789TJQKA'
 DECK = tuple(''.join(card) for card in itertools.product(RANKS, SUITS))
+#Assume A is always 11 points. The function that determines points in a hand will take into account
+#ace being possible 1 or 11 points.
 CARD_VALUES = { "A":11, "2":2, "3":3, "4":4, "5":5, "6":6, "7":7, "8":8, "9":9, "T":10, "J":10, "Q":10, "K":10 }
 
 
+#Updates the matrix that keep tracks of how many of each card category
+#the player has. 
 def update_hand(card, num_card_value):
 	card_value = card[0]#The first character tells us the card value
 	
@@ -26,11 +30,14 @@ def update_hand(card, num_card_value):
 def hand_points(cards):
 	num_aces=0
 	points=0
+	#Assume Aces count as 11 points
 	for card in cards:
 		points+=CARD_VALUES[card[0]]
 		if card[0] in "A":
 			num_aces+=1
 
+	#Deal with cases where Aces being 11 points would be bust,
+	#while treating it as 1 point would not. Accounts for multiple aces.	
 	while points > 21 and num_aces > 0:
 		num_aces-=1
 		points-=10
@@ -46,7 +53,7 @@ def play_one_game(bj_strat):
 	num_card_value={"A":0,"2345":0,"6789":0,"TJQK":0}
 	decision='H' 
 	deck_counter=0
-	doubledown=1 #Multiplier of 2 if player doubled down.
+	doubledown=1 #Multiplier of 2 for winnings if player doubled down.
 
 	#Deal initial hand
 	my_cards=[]
@@ -62,31 +69,36 @@ def play_one_game(bj_strat):
 	my_points=hand_points(my_cards)
 
 	deal_cards.append(hand[3])
+	#In the strategy matrix, an Ace maps to an index of 0, 
+	#a 2 maps to an index of 1, etc, TJQK maps to an index of 9
 	dealer_card=(CARD_VALUES[hand[3][0]]-1)%10
 
+	#Dealt 4 cards so far
 	deck_counter=4
 
 	# 'H'-hold, 'S'-stand, 'D'-doubledown
 	# strat[dealer_card][my_points][num_aces][num_two_to_five][num_six_to_nine][num_faces]
 	if my_points < 21:
 		decision=bj_strat[dealer_card][my_points][num_card_value["A"]][num_card_value["2345"]][num_card_value["6789"]][num_card_value["TJQK"]].decision()
+	#Automatically stand if blackjack.
 	else:
 		decision='S'
 
-	#Deal a card based on decision as long as not busting 
+	#Deal a card based on decision as long as not busting and not standing
 	while my_points < 21 and decision!='S':
 		my_cards.append(hand[deck_counter])
 		update_hand(hand[deck_counter], num_card_value)
 		my_points=hand_points(my_cards)
 		if decision=='D':
-			doubledown=2
+			doubledown=2 #Mutliplier for winnings.
 			decision='S' #Must stand after doubling.
 		elif my_points < 21:
+			#Decision for next card. 
 			decision=bj_strat[dealer_card][my_points][num_card_value["A"]][num_card_value["2345"]][num_card_value["6789"]][num_card_value["TJQK"]].decision()
 
 		deck_counter+=1
 
-	#Dealer's turn
+	#Dealer's turn. Deal must hit if it has less than or equal to 17 points.
 	dealer_points=hand_points(deal_cards)
 	while dealer_points <= 17:
 		deal_cards.append(hand[deck_counter])
