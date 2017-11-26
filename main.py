@@ -6,7 +6,9 @@ from fitness import *
 def main():
     population = []
     populationSize = 20
-    numGenerations = 100
+    numGenerations = 100 #number of times parents are selected and offspring produced
+    numTrials = 100 #number of times a population member is tested to determine fitness
+    alpha = .5 #
 
     print 'Initializing population...'
     for i in range(0, populationSize):
@@ -16,10 +18,10 @@ def main():
 
     print 'Initial population created.'
     for member in population:
-        member.fitnessScores = fitness_scores(member.strategy, numGenerations)
+        print fitness_score_linear(member.strategy, numTrials, alpha)
 
-    for member in population:
-        print member.computeAvgFitness()
+    #for member in population:
+        #print member.fitness
 
 
     #print strategy[0][5][0][2][0][0]
@@ -29,15 +31,8 @@ def main():
 
 class Population_Member:
     def __init__(self):
-        self.fitnessScores = []
+        self.fitness = float(0.00)
 
-    def computeAvgFitness(self):
-        numScores = len(self.fitnessScores)
-        avg = float(0.00)
-        for score in self.fitnessScores:
-            avg += float(score)
-        self.avgFitness = avg/(float(numScores))
-        return self.avgFitness
 
 
 """
