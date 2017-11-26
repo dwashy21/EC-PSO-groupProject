@@ -8,7 +8,7 @@ def fitness_score_linear(strat,num_trials,alpha):
 	for i in range(0,num_trials):
 		score += play_one_game(strat)
 	#Fitness scores should be positive, so normalize to a minimum of 0.
-	return min(0,alpha*score+2*num_trials)
+	return max(0,alpha*score+2*num_trials)
 
 #Returns the fitness score of a given strategy and how many games should be played to
 #determine the fitness_score. The fitness score is a square of the net score.
