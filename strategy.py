@@ -1,7 +1,6 @@
 import numpy as np
 from random import random
 
-#Class to represent a strategy for blackjack
 class Blackjack_Strategy:
 	double_rate = 0.0
 	hit_rate = 0.0
@@ -29,11 +28,9 @@ class Blackjack_Strategy:
 	def __str__(self):
 		return "d" + str(self.double_rate) + " h" + str(self.hit_rate) + " s" + str(self.stand_rate)
 
-	#Makes a decision based on the roulette wheel for the relative magnitudes of 
-	#the values for double, hit, and stand
 	def decision(self):
 		total= self.double_rate+self.hit_rate+self.stand_rate
-		decision = random() #between 0 and 1
+		decision = random()
 		if decision < self.double_rate:
 			return 'D'
 		elif decision < self.double_rate+self.hit_rate:
