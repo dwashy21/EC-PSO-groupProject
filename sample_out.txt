@@ -1,0 +1,40 @@
+generation 0:
+	maxFitness = 1800.500000
+	avgFitness = 1737.457500
+	size = 100
+generation 1:
+	maxFitness = 1815.500000
+	avgFitness = 1745.372500
+	size = 100
+generation 2:
+	maxFitness = 1798.500000
+	avgFitness = 1740.920000
+	size = 100
+generation 3:
+	maxFitness = 1831.500000
+	avgFitness = 1743.845000
+	size = 100
+generation 4:
+	maxFitness = 1814.000000
+	avgFitness = 1747.975000
+	size = 100
+generation 5:
+	maxFitness = 1821.750000
+	avgFitness = 1745.897500
+	size = 100
+generation 6:
+	maxFitness = 1808.000000
+	avgFitness = 1744.940000
+	size = 100
+generation 7:
+	maxFitness = 1824.000000
+	avgFitness = 1742.940000
+	size = 100
+generation 8:
+	maxFitness = 1821.500000
+	avgFitness = 1745.750000
+	size = 100
+generation 9:
+	maxFitness = 1826.750000
+	avgFitness = 1747.605000
+	size = 100
