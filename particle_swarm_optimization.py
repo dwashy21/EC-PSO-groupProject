@@ -15,7 +15,7 @@ class Particle:
 
 	def __init__(self):
 		self.position=generate_strategy()
-		self.fitness=fitness_score_linear(self.position,NUM_TRIALS,NUM_TRIALS_ALPHA)
+		self.fitness=fitness_score_points(self.position,NUM_TRIALS,NUM_TRIALS_ALPHA)
 		self.velocity=generate_strategy()
 		for dealer_card in range(0,10):#Ace to Ten. JQK counts as the same as 10.
 			for num_points in range(0,21):#0 to 20 points
@@ -50,7 +50,7 @@ class Particle:
 						for s in range(0,4):#0 to 3 in this category
 							for f in range(0,3):#0 to 2 faces
 								self.position[d][p][a][t][s][f] = self.position[d][p][a][t][s][f]+self.velocity[d][p][a][t][s][f]
-		self.fitness=fitness_score_linear(self.position,NUM_TRIALS,NUM_TRIALS_ALPHA)
+		self.fitness=fitness_score_points(self.position,NUM_TRIALS,NUM_TRIALS_ALPHA)
 		if self.fitness>self.personal_best_fitness:
 			self.personal_best=self.position
 			self.personal_best_fitness=self.fitness
