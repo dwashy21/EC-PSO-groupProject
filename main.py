@@ -13,7 +13,7 @@ def main():
     numTrials = 1000 #number of times a population member is tested to determine fitness
     numTrialsAlpha = 1 #NOTE try, .
     offspringAlpha = .5 #NOTE: try ..2, .5, .7, .9
-    mutateAlpha = ..5 #NOTE: try .2, .5, .7, .9
+    mutateAlpha = .5 #NOTE: try .2, .5, .7, .9
 
     parentSelectionMethods = ['mu+lambda', 'mu,lambda', 'r']
     selMethod = parentSelectionMethods[0];
