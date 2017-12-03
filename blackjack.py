@@ -12,14 +12,14 @@ CARD_VALUES = { "A":11, "2":2, "3":3, "4":4, "5":5, "6":6, "7":7, "8":8, "9":9, 
 
 def update_hand(card, num_card_value):
 	card_value = card[0]#The first character tells us the card value
-	
+
 	if card_value in "A":
 		num_card_value["A"]=num_card_value["A"]+1
-	elif card_value in "2345":		
+	elif card_value in "2345":
 		num_card_value["2345"]=num_card_value["2345"]+1
-	elif card_value in "6789":		
+	elif card_value in "6789":
 		num_card_value["6789"]=num_card_value["6789"]+1
-	elif card_value in "TJQK":		
+	elif card_value in "TJQK":
 		num_card_value["TJQK"]=num_card_value["TJQK"]+1
 
 #Gives number of points given hand.
@@ -44,7 +44,7 @@ def play_one_game(bj_strat):
 	dealer_card=0
 	my_points=0
 	num_card_value={"A":0,"2345":0,"6789":0,"TJQK":0}
-	decision='H' 
+	decision='H'
 	deck_counter=0
 	doubledown=1 #Multiplier of 2 if player doubled down.
 
@@ -73,7 +73,7 @@ def play_one_game(bj_strat):
 	else:
 		decision='S'
 
-	#Deal a card based on decision as long as not busting 
+	#Deal a card based on decision as long as not busting
 	while my_points < 21 and decision!='S':
 		my_cards.append(hand[deck_counter])
 		update_hand(hand[deck_counter], num_card_value)
@@ -97,14 +97,14 @@ def play_one_game(bj_strat):
 
 	#Determine winner
 	if my_points > 21:
-		return -1*doubledown
+		return (-1*doubledown,0)
 	elif dealer_points > 21:
-		return doubledown
+		return (doubledown,my_points)
 	elif my_points==21 and len(my_cards)==2 and (dealer_points < 21 or len(deal_cards)>2):
-		return doubledown*1.5 #A blackjack pays out 3:2
+		return (doubledown*1.5,my_points) #A blackjack pays out 3:2
 	elif my_points < dealer_points:
-		return -1*doubledown
+		return (-1*doubledown,my_points)
 	elif my_points > dealer_points:
-		return doubledown
+		return (doubledown,my_points)
 	else:
-		return 0 #Tied
+		return (0,my_points) #Tied

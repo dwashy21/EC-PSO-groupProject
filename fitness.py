@@ -6,7 +6,8 @@ from blackjack import *
 def fitness_score_linear(strat,num_trials,alpha):
 	score=0
 	for i in range(0,num_trials):
-		score += play_one_game(strat)
+		(s,p)=play_one_game(strat)
+		score += s
 	#Fitness scores should be positive, so normalize to a minimum of 0.
 	return max(0,alpha*score+2*num_trials)
 
@@ -16,9 +17,18 @@ def fitness_score_linear(strat,num_trials,alpha):
 def fitness_score_quadratic(strat,num_trials,alpha):
 	score=0
 	for i in range(0,num_trials):
-		score += play_one_game(strat)
+		(s,p)=play_one_game(strat)
+		score += s
 	#Fitness scores should be positive, so normalize to a minimum of 0.
 	return max(0,alpha*score*abs(score)+pow(2*num_trials,2))
+
+def fitness_score_points(strat,num_trials,alpha):
+	score=0
+	for i in range(0,num_trials):
+		(s,p)=play_one_game(strat)
+		score += p
+	#Fitness scores should be positive, so normalize to a minimum of 0.
+	return score
 
 #Example usage
 #s = generate_strategy()
