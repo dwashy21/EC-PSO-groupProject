@@ -5,15 +5,17 @@ import numpy as np
 import time
 
 #Constants for updating velocities
-C1=1.1
-C2=2.8
+C1=0.75
+C2=3.25
 NUM_TRIALS=1000
 NUM_TRIALS_ALPHA=1
 
 #A class representing a particle
 class Particle:
 
-	def __init__(self):
+	def __init__(self,index,num_particles):
+		self.index = index
+		self.num_particles = num_particles
 		self.position=generate_strategy()
 		self.fitness=fitness_score_points(self.position,NUM_TRIALS,NUM_TRIALS_ALPHA)
 		self.velocity=generate_strategy()
@@ -30,17 +32,22 @@ class Particle:
 		self.personal_best_fitness=self.fitness
 
 	def update_velocity(self,neighbor_best):	
-		#self.velocity = self.velocity+(self.personal_best-self.position)*random.random()*C1+(neighbor_best.position-self.position)*random.random()*C2
 		for d in range(0,10):#Ace to Ten. JQK counts as the same as 10.
 			for p in range(0,21):#0 to 20 points
 				for a in range(0,5):#0 to 4 aces
 					for t in range(0,9): #0 to 8 in this category
 						for s in range(0,4):#0 to 3 in this category
 							for f in range(0,3):#0 to 2 faces
-								v=self.velocity[d][p][a][t][s][f]
-								alpha=(self.personal_best[d][p][a][t][s][f]-self.position[d][p][a][t][s][f])*random.random()*C1
-								beta=(neighbor_best.position[d][p][a][t][s][f]-self.position[d][p][a][t][s][f])*random.random()*C2	
-								self.velocity[d][p][a][t][s][f]=v+alpha+beta			
+								v=self.velocity[d,p,a,t,s,f]
+								r1=random.random()
+								r2=random.random()
+								alpha_h=(self.personal_best[d][p][a][t][s][f].hit_rate-self.position[d][p][a][t][s][f].hit_rate)*r1*C1
+								beta_h=(neighbor_best.position[d][p][a][t][s][f].hit_rate-self.position[d][p][a][t][s][f].hit_rate)*r2*C2	
+								alpha_s=(self.personal_best[d][p][a][t][s][f].stand_rate-self.position[d][p][a][t][s][f].stand_rate)*r1*C1
+								beta_s=(neighbor_best.position[d][p][a][t][s][f].stand_rate-self.position[d][p][a][t][s][f].stand_rate)*r2*C2	
+								
+								self.velocity[d][p][a][t][s][f].hit_rate=v.hit_rate+alpha_h+beta_h
+								self.velocity[d][p][a][t][s][f].stand_rate=v.stand_rate+alpha_s+beta_s
 
 	def update_position(self):
 		for d in range(0,10):#Ace to Ten. JQK counts as the same as 10.
@@ -49,7 +56,9 @@ class Particle:
 					for t in range(0,9): #0 to 8 in this category
 						for s in range(0,4):#0 to 3 in this category
 							for f in range(0,3):#0 to 2 faces
-								self.position[d][p][a][t][s][f] = self.position[d][p][a][t][s][f]+self.velocity[d][p][a][t][s][f]
+								self.position[d][p][a][t][s][f].hit_rate = self.position[d][p][a][t][s][f].hit_rate+self.velocity[d][p][a][t][s][f].hit_rate
+								self.position[d][p][a][t][s][f].stand_rate = self.position[d][p][a][t][s][f].stand_rate+self.velocity[d][p][a][t][s][f].stand_rate
+
 		self.fitness=fitness_score_points(self.position,NUM_TRIALS,NUM_TRIALS_ALPHA)
 		if self.fitness>self.personal_best_fitness:
 			self.personal_best=self.position
@@ -61,31 +70,42 @@ class Particle:
 		if topology == 1:
 			s=sorted(particles, key=getFitness,reverse=True)
 			return s[0]
-		else: #Fix this
-			s=sorted(particles, key=getFitness,reverse=True)
-			return s[0]
-
-
+		else: 	
+			i=self.index
+			left_fit=particles[i-1].fitness
+			self_fit=particles[i].fitness
+			right_fit=particles[(i+1)%len(particles)].fitness
+			max_fit=max(left_fit,self_fit,right_fit)
+			if max_fit==left_fit:
+				return particles[i-1]
+			elif max_fit==self_fit:
+				return particles[i]
+			else:
+				return particles[(i+1)%len(particles)]
 
 def particle_swarm_optimization():
 	t = time.time()
 	NUM_PARTICLES = 10
 	MAX_GEN=100
-	particles = [Particle() for i in range(0,NUM_PARTICLES)]
-
+	particles = [Particle(i,NUM_PARTICLES) for i in range(0,NUM_PARTICLES)]
+	best_fitness_history = []
+	avg_fitness_history = []
 
 	for gen in range(0,MAX_GEN):
 		print "Gen:" + str(gen)
+		t=time.time()
 		for j in range(0,NUM_PARTICLES):
-			particles[j].update_velocity(particles[j].get_neighborhood_best(1,particles))
+			particles[j].update_velocity(particles[j].get_neighborhood_best(2,particles))
 			particles[j].update_position()
 		best=sorted(particles, key=getFitness,reverse=True)[0]
-		print best.fitness
-	elapsed = time.time() - t
+		best_fitness_history.append(best.fitness)
+		avg_fitness_history.append(getAvgFitness(particles))
+		print best.fitness 
+		print avg_fitness_history[-1]
+		print time.time() - t
+
 
 	best=sorted(particles, key=getBestFitness,reverse=True)[0]
-	print best.personal_best_fitness
-	print elapsed
 
 def getFitness(particle):
 	return particle.fitness
@@ -93,6 +113,14 @@ def getFitness(particle):
 def getBestFitness(particle):
 	return particle.personal_best_fitness
 
+def getAvgFitness(particles):
+	avg = 0
+	for particle in particles:
+		avg+=particle.fitness
+	avg /= len(particles)
+	return avg
 
-
+print 'start\n'
+t = time.time()
 particle_swarm_optimization()
+print time.time()-t
