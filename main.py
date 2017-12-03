@@ -70,7 +70,7 @@ def selectParents(generation, method):
 
 
 def createOffspring(method, parents, alpha, offspringGen):
-    if(method == 'mulambda'):
+    if('mu' in method):
         return createCrossoverOffspring(parents, alpha, offspringGen)
     elif(method=='r'):
         print 'here'
