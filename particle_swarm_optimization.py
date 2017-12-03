@@ -3,6 +3,7 @@ from strategy import *
 from fitness import *
 import numpy as np
 import time
+import matplotlib.pyplot as plt
 
 #Constants for updating velocities
 C1=0.75
@@ -85,7 +86,7 @@ class Particle:
 
 def particle_swarm_optimization():
 	t = time.time()
-	NUM_PARTICLES = 10
+	NUM_PARTICLES = 100
 	MAX_GEN=100
 	particles = [Particle(i,NUM_PARTICLES) for i in range(0,NUM_PARTICLES)]
 	best_fitness_history = []
@@ -104,6 +105,15 @@ def particle_swarm_optimization():
 		print avg_fitness_history[-1]
 		print time.time() - t
 
+
+	plt.plot(best_fitness_history,'b--')
+	plt.plot(avg_fitness_history,'r')
+	plt.legend(['Max Fitness Overall','Average Fitness in Current Generation'], loc='upper left')
+	plt.ylabel('Fitness Score')
+	plt.xlabel('Generation Number')
+	plt.title('Average and Maximum Fitness Score Over Generations for PSO with 100 particles using ring topology,C1=0.75,C2=2.25,face value as fitness function,  ')
+	#plt.show()
+	plt.savefig('file.png')
 
 	best=sorted(particles, key=getBestFitness,reverse=True)[0]
 
