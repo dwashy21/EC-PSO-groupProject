@@ -97,14 +97,14 @@ def play_one_game(bj_strat):
 
 	#Determine winner
 	if my_points > 21:
-		return -1*doubledown
+		return (-1*doubledown,0)
 	elif dealer_points > 21:
-		return doubledown
+		return (doubledown,my_points)
 	elif my_points==21 and len(my_cards)==2 and (dealer_points < 21 or len(deal_cards)>2):
-		return doubledown*1.5 #A blackjack pays out 3:2
+		return (doubledown*1.5,my_points) #A blackjack pays out 3:2
 	elif my_points < dealer_points:
-		return -1*doubledown
+		return (-1*doubledown,my_points)
 	elif my_points > dealer_points:
-		return doubledown
+		return (doubledown,my_points)
 	else:
-		return 0 #Tied
+		return (0,my_points) #Tied
