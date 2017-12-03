@@ -60,7 +60,7 @@ class Blackjack_Strategy:
 # Remember everything has to be minus one, since arrays start at 0.
 # strat[dealer_card][num_points][num_aces][num_two_to_five][num_six_to_nine][num_faces]
 def generate_strategy():
-	dealer_card_array = np.full((10,21,95,9,4,3),Blackjack_Strategy(),object)
+	dealer_card_array = np.full((10,21,5,9,4,3),None,object)
 	for dealer_card in range(0,10):#Ace to Ten. JQK counts as the same as 10.
 		#num_points_array = []
 		for num_points in range(0,21):#0 to 20 points
