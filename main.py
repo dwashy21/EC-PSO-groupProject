@@ -9,14 +9,14 @@ from plot import *
 # strat[dealer_card][num_points][num_aces][num_two_to_five][num_six_to_nine][num_faces]
 def main():
     populationSize = 12 #must be (>=2) NOTE: try 12, 60, 200
-    numGenerations = 5 #number of times parents are selected and offspring produced NOTE: try 10, 50, 100
+    numGenerations = 10 #number of times parents are selected and offspring produced NOTE: try 10, 50, 100
     numTrials = 1000 #number of times a population member is tested to determine fitness
     numTrialsAlpha = 1 #NOTE try, .
     offspringAlpha = .5 #NOTE: try ..2, .5, .7, .9
-    mutateAlpha = .8 #NOTE: try .2, .5, .7, .9
+    mutateAlpha = ..5 #NOTE: try .2, .5, .7, .9
 
-    parentSelectionMethods = ['mu+lambda', 'mu,lambda']
-    selMethod = parentSelectionMethods[1];
+    parentSelectionMethods = ['mu+lambda', 'mu,lambda', 'r']
+    selMethod = parentSelectionMethods[0];
 
     maxFitness = []
     avgFitness = []
@@ -26,7 +26,7 @@ def main():
     for i in range(0,numGenerations):
         scorePopulationFitness(generations[i], numTrials, numTrialsAlpha)
         parents = selectParents(generations[i], selMethod)
-        offspring = createCrossoverOffspring(parents, offspringAlpha, i+1)
+        offspring = createOffspring(selMethod, parents, offspringAlpha, i+1)
         offspring = mutate(offspring, mutateAlpha)
         nextGeneration = prepareNextGeneration(Generation(), parents, offspring, i+1, selMethod)
         generations.append(nextGeneration) #pass forward new generation
@@ -68,6 +68,12 @@ def selectParents(generation, method):
 
     return parents
 
+
+def createOffspring(method, parents, alpha, offspringGen):
+    if(method == 'mulambda'):
+        return createCrossoverOffspring(parents, alpha, offspringGen)
+    elif(method=='r'):
+        print 'here'
 
 # iterate through every index of strategy matrix, swapping respective values if randomly generated num is < alpha
 # STRATEGY : For each parent, and for each entry in parent's matrix, generate a random num. If random num < alpha, then swap the two
