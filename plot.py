@@ -8,4 +8,5 @@ plt.legend(['Max Fitness Overall','Average Fitness in Current Generation'], loc=
 plt.ylabel('Fitness Score')
 plt.xlabel('Generation Number')
 plt.title('Average and Maximum Fitness Score Over Generations')
-plt.show()
+#plt.show()
+plt.savefig('file.png')
