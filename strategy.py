@@ -1,5 +1,5 @@
 import numpy as np
-from random import random
+from random import *
 
 class Blackjack_Strategy:
 	double_rate = 0.0
@@ -11,19 +11,37 @@ class Blackjack_Strategy:
 		self.stand_rate = random()
 
 	def __add__(self, other):
-		self.double_rate += other.double_rate
-		self.hit_rate += other.hit_rate
-		self.stand_rate += other.stand_rate
+		b = Blackjack_Strategy()
+		b.double_rate = self.double_rate + other.double_rate
+		b.hit_rate = self.hit_rate + other.hit_rate
+		b.stand_rate = self.stand_rate + other.stand_rate
+		return b
 
 	def __sub__(self, other):
-		self.double_rate -= other.double_rate
-		self.hit_rate -= other.hit_rate
-		self.stand_rate -= other.stand_rate
+		b = Blackjack_Strategy()
+		b.double_rate = self.double_rate - other.double_rate
+		b.hit_rate = self.hit_rate - other.hit_rate
+		b.stand_rate = self.stand_rate - other.stand_rate
+		return b
+	def subtract(self, other):
+		b = Blackjack_Strategy()
+		b.double_rate = self.double_rate - other.double_rate
+		b.hit_rate = self.hit_rate - other.hit_rate
+		b.stand_rate = self.stand_rate - other.stand_rate
+		return b
 
 	def __mul__(self, constant):
-		self.double_rate *= constant
-		self.hit_rate *= constant
-		self.stand_rate *= constant
+		b = Blackjack_Strategy()
+		b.double_rate = self.double_rate * constant
+		b.hit_rate = self.hit_rate * constant
+		b.stand_rate = self.stand_rate * constant
+		return b
+
+	def random_velocity(self):
+		self.double_rate *= uniform(-1,1)
+		self.hit_rate *= uniform(-1,1)
+		self.stand_rate *= uniform(-1,1)
+		return self
 
 	def __str__(self):
 		return "d" + str(self.double_rate) + " h" + str(self.hit_rate) + " s" + str(self.stand_rate)
@@ -42,7 +60,7 @@ class Blackjack_Strategy:
 # Remember everything has to be minus one, since arrays start at 0.
 # strat[dealer_card][num_points][num_aces][num_two_to_five][num_six_to_nine][num_faces]
 def generate_strategy():
-	dealer_card_array = np.full((10,21,95,9,4,3),Blackjack_Strategy(),object)
+	dealer_card_array = np.full((10,21,5,9,4,3),None,object)
 	for dealer_card in range(0,10):#Ace to Ten. JQK counts as the same as 10.
 		#num_points_array = []
 		for num_points in range(0,21):#0 to 20 points
