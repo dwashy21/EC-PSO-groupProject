@@ -8,8 +8,8 @@ from plot import *
 
 # strat[dealer_card][num_points][num_aces][num_two_to_five][num_six_to_nine][num_faces]
 def main():
-    populationSize = 12 #must be (>=2) NOTE: try 12, 60, 200
-    numGenerations = 10 #number of times parents are selected and offspring produced NOTE: try 10, 50, 100
+    populationSize = 100 #must be (>=2)
+    numGenerations = 10 #number of times parents are selected and offspring produced
     numTrials = 1000 #number of times a population member is tested to determine fitness
     numTrialsAlpha = 1 #NOTE try, .
     offspringAlpha = .5 #NOTE: try ..2, .5, .7, .9
@@ -18,24 +18,36 @@ def main():
     parentSelectionMethods = ['mu+lambda', 'mu,lambda', 'r']
     selMethod = parentSelectionMethods[0];
 
-    maxFitness = []
+    maxFitness = [-1]
     avgFitness = []
     generations = []
     generations.append(Generation())
     generations[0].population = initializePopulation(populationSize)
     for i in range(0,numGenerations):
         scorePopulationFitness(generations[i], numTrials, numTrialsAlpha)
+        print '********'
+        print generations[i].maxFitness
+        print '\n'
         parents = selectParents(generations[i], selMethod)
         offspring = createOffspring(selMethod, parents, offspringAlpha, i+1)
         offspring = mutate(offspring, mutateAlpha)
         nextGeneration = prepareNextGeneration(Generation(), parents, offspring, i+1, selMethod)
         generations.append(nextGeneration) #pass forward new generation
-        maxFitness.append(generations[i].maxFitness)
+        maxFitness.append(getMaxFitness(generations[i], maxFitness[i]))
         avgFitness.append(generations[i].avgFitness)
         printGenerationInfo(generations[i])
 
+    for m in maxFitness:
+        print m
+        print '\n'
     createPlot(maxFitness, avgFitness)
 
+
+def getMaxFitness(generation, universalMax):
+    if(generation.maxFitness > universalMax):
+        return generation.maxFitness
+    else:
+        return universalMax
 
 def scorePopulationFitness(generation, numTrials, alpha):
     maxFitness = float(0.00)
