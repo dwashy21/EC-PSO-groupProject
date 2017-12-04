@@ -8,8 +8,8 @@ from plot import *
 
 # strat[dealer_card][num_points][num_aces][num_two_to_five][num_six_to_nine][num_faces]
 def main():
-    populationSize = 100 #must be (>=2)
-    numGenerations = 100 #number of times parents are selected and offspring produced
+    populationSize = 10 #must be (>=2)
+    numGenerations = 10 #number of times parents are selected and offspring produced
     numTrials = 1000 #number of times a population member is tested to determine fitness
     numTrialsAlpha = 1 #NOTE try, .
     offspringAlpha = .5 #NOTE: try ..2, .5, .7, .9
@@ -35,7 +35,10 @@ def main():
         printGenerationInfo(generations[i])
 
     createPlot(maxFitness, avgFitness)
-
+    print 'max fitness over all generations: \n'
+    print '\t'
+    print maxFitness[numGenerations-1]
+    print '\n'
 
 def getMaxFitness(generation, universalMax):
     if(generation.maxFitness > universalMax):
