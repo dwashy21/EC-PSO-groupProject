@@ -34,11 +34,18 @@ def main():
         avgFitness.append(generations[i].avgFitness)
         printGenerationInfo(generations[i])
 
+    n = numGenerations-1
     createPlot(maxFitness, avgFitness)
-    print 'max fitness over all generations: \n'
-    print '\t'
-    print maxFitness[numGenerations-1]
-    print '\n'
+    writeSummary(selMethod, maxFitness[n], avgFitness[n], offspringAlpha, mutateAlpha)
+
+def writeSummary(method, maxF, avgF, offspringAlpha, mutateAlpha):
+    file = open('method_'+str(method)+'-'+str(random.random())+'.txt', 'w');
+    file.write('method: '+str(method)+'\n')
+    file.write('maxF: '+str(maxF)+'\n')
+    file.write('avgF: '+str(avgF)+'\n')
+    file.write('offspringAlpha: '+str(offspringAlpha)+'\n')
+    file.write('mutateAlpha: '+str(mutateAlpha)+'\n')
+    file.close()
 
 def getMaxFitness(generation, universalMax):
     if(generation.maxFitness > universalMax):
