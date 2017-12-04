@@ -9,14 +9,14 @@ from plot import *
 # strat[dealer_card][num_points][num_aces][num_two_to_five][num_six_to_nine][num_faces]
 def main():
     populationSize = 100 #must be (>=2)
-    numGenerations = 10 #number of times parents are selected and offspring produced
+    numGenerations = 100 #number of times parents are selected and offspring produced
     numTrials = 1000 #number of times a population member is tested to determine fitness
     numTrialsAlpha = 1 #NOTE try, .
     offspringAlpha = .5 #NOTE: try ..2, .5, .7, .9
     mutateAlpha = .5 #NOTE: try .2, .5, .7, .9
 
     parentSelectionMethods = ['mu+lambda', 'mu,lambda', 'r']
-    selMethod = parentSelectionMethods[0];
+    selMethod = parentSelectionMethods[1];
 
     maxFitness = [-1]
     avgFitness = []
@@ -25,9 +25,6 @@ def main():
     generations[0].population = initializePopulation(populationSize)
     for i in range(0,numGenerations):
         scorePopulationFitness(generations[i], numTrials, numTrialsAlpha)
-        print '********'
-        print generations[i].maxFitness
-        print '\n'
         parents = selectParents(generations[i], selMethod)
         offspring = createOffspring(selMethod, parents, offspringAlpha, i+1)
         offspring = mutate(offspring, mutateAlpha)
@@ -37,9 +34,6 @@ def main():
         avgFitness.append(generations[i].avgFitness)
         printGenerationInfo(generations[i])
 
-    for m in maxFitness:
-        print m
-        print '\n'
     createPlot(maxFitness, avgFitness)
 
 
