@@ -16,7 +16,7 @@ def main():
     mutateAlpha = .5 #NOTE: try .2, .5, .7, .9
 
     parentSelectionMethods = ['mu+lambda', 'mu,lambda', 'r']
-    selMethod = parentSelectionMethods[1];
+    selMethod = parentSelectionMethods[0];
 
     maxFitness = [-1]
     avgFitness = []
@@ -71,37 +71,65 @@ def selectParents(generation, method):
     parents = []
     numParents = len(generation.population)/2 #select 50% from
     if(numParents % 2 == 1): #if 'odd' num parents, make even num. We are extracting upper percentile of parents in regards to fitness, so we do not lose best strategy
-        numParents -= 1
+       numParents -= 1
 
     if(method=='mu,lambda'):
         for member in generation.population:
             if(member.generationCount == generation.generationCount):
                 parents.append(member)
-    elif(method=='mu+lambda'):
+    elif(method=='mu+lambda' or method=='r'):
         sortedPopulation = sorted(generation.population, key=getMemberFitness,reverse=True) #sort by fitness (lowest to highest)
         for member in sortedPopulation[0:numParents]: #select the most fit, upper 50% of population
             parents.append(member)
-
     return parents
 
 
-def createOffspring(method, parents, alpha, offspringGen):
-    if('mu' in method):
-        return createCrossoverOffspring(parents, alpha, offspringGen)
-    elif(method=='r'):
-        print 'here'
+def createOffspring(method, parents, alpha, offspringGen):  
+    return createCrossoverOffspring(method, parents, alpha, offspringGen)
+
 
 # iterate through every index of strategy matrix, swapping respective values if randomly generated num is < alpha
 # STRATEGY : For each parent, and for each entry in parent's matrix, generate a random num. If random num < alpha, then swap the two
-def createCrossoverOffspring(parents, alpha, offspringGeneration):
+def createCrossoverOffspring(method, parents, alpha, offspringGeneration):
     i = 0
     offspring = []
-    while(i < len(parents)): #if iterating through parents, upper bound should be num of pairs
-        samp = random.sample(parents, 2)
-        mother = samp[0]
-        father = samp[1]
-        childOne = samp[0].copy() #first child is base copy of 'mother'
-        childTwo = samp[1].copy() #second child is base copy of 'father'
+    #Generate roulette wheel
+    roulette=[]
+    total=0
+    for parent in parents:
+        total+=parent.fitness
+        roulette.append(total)
+    for j in range(0,len(roulette)):
+        roulette[j]=roulette[j]/total
+
+    if ',' in method:
+        parent_len = len(parents)
+    elif len(parents)%4==0:
+        parent_len = len(parents)+1
+    else:
+        parent_len = len(parents)-1
+    while(i < parent_len): #if iterating through parents, upper bound should be num of pairs
+        mother=None
+        father=None
+        if('mu' in method):
+            samp = random.sample(parents, 2)
+            mother = samp[0]
+            father = samp[1]
+        elif(method=='r'):#Roulete wheel
+            r1 = random.random()
+            r2 = random.random()
+            index1 = 0 
+            index2 = 0 
+            while(r1>roulette[index1]):
+                index1+=1
+            mother = parents[index1]
+            while(r2>roulette[index2]):
+                index2+=1   
+            father = parents[index2]
+
+
+        childOne = mother.copy() #first child is base copy of 'mother'
+        childTwo = father.copy() #second child is base copy of 'father'
         childOne.generationCount = offspringGeneration
         childTwo.generationCount = offspringGeneration
         for dealer_card in range(0, 10): #Ace to Ten. JQK counts as the same as 10.
@@ -139,7 +167,7 @@ def prepareNextGeneration(nextGen, parents, offspring, genCount, selMethod):
     if(selMethod == 'mu,lambda'):
         nextGen.population = offspring
         nextGen.generationCount = genCount
-    elif(selMethod == 'mu+lambda'):
+    elif(selMethod == 'mu+lambda' or selMethod == 'r'):
         nextGen.population = parents + offspring
         nextGen.generationCount = genCount
 
