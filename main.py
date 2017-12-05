@@ -30,12 +30,13 @@ def main():
         offspring = mutate(offspring, mutateAlpha)
         nextGeneration = prepareNextGeneration(Generation(), parents, offspring, i+1, selMethod)
         generations.append(nextGeneration) #pass forward new generation
+        scorePopulationFitness(generations[i], numTrials, numTrialsAlpha)
         maxFitness.append(getMaxFitness(generations[i], maxFitness[i]))
         avgFitness.append(generations[i].avgFitness)
         printGenerationInfo(generations[i])
 
     n = numGenerations-1
-    createPlot(maxFitness, avgFitness)
+    createPlot(maxFitness[1:-1], avgFitness)
     writeSummary(selMethod, maxFitness[n], avgFitness[n], offspringAlpha, mutateAlpha)
 
 def writeSummary(method, maxF, avgF, offspringAlpha, mutateAlpha):
