@@ -8,15 +8,15 @@ from plot import *
 
 # strat[dealer_card][num_points][num_aces][num_two_to_five][num_six_to_nine][num_faces]
 def main():
-    populationSize = 10 #must be (>=2)
-    numGenerations = 10 #number of times parents are selected and offspring produced
+    populationSize = 100 #must be (>=2)
+    numGenerations = 100 #number of times parents are selected and offspring produced
     numTrials = 1000 #number of times a population member is tested to determine fitness
     numTrialsAlpha = 1 #NOTE try, .
     offspringAlpha = .5 #NOTE: try ..2, .5, .7, .9
     mutateAlpha = .5 #NOTE: try .2, .5, .7, .9
 
     parentSelectionMethods = ['mu+lambda', 'mu,lambda', 'r']
-    selMethod = parentSelectionMethods[0];
+    selMethod = parentSelectionMethods[2];
 
     maxFitness = [-1]
     avgFitness = []
@@ -36,7 +36,7 @@ def main():
         printGenerationInfo(generations[i])
 
     n = numGenerations-1
-    createPlot(maxFitness[1:-1], avgFitness)
+    createPlot(maxFitness[1:len(maxFitness)], avgFitness)
     writeSummary(selMethod, maxFitness[n], avgFitness[n], offspringAlpha, mutateAlpha)
 
 def writeSummary(method, maxF, avgF, offspringAlpha, mutateAlpha):
@@ -85,7 +85,7 @@ def selectParents(generation, method):
     return parents
 
 
-def createOffspring(method, parents, alpha, offspringGen):  
+def createOffspring(method, parents, alpha, offspringGen):
     return createCrossoverOffspring(method, parents, alpha, offspringGen)
 
 
@@ -119,13 +119,13 @@ def createCrossoverOffspring(method, parents, alpha, offspringGeneration):
         elif(method=='r'):#Roulete wheel
             r1 = random.random()
             r2 = random.random()
-            index1 = 0 
-            index2 = 0 
+            index1 = 0
+            index2 = 0
             while(r1>roulette[index1]):
                 index1+=1
             mother = parents[index1]
             while(r2>roulette[index2]):
-                index2+=1   
+                index2+=1
             father = parents[index2]
 
 
